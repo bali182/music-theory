@@ -24,7 +24,7 @@ export function isValidEnumValue<T>(enumType: { [key: string]: T }, input: T): b
   return Object.values(enumType).includes(input)
 }
 
-export function areArraysShallowEqual<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): boolean {
+export function arraysShallowEqual<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): boolean {
   if (a === b) {
     return true
   }

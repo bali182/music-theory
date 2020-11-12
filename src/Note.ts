@@ -1,18 +1,19 @@
 import { NoteAccidental } from './NoteAccidental'
 import { NoteName } from './NoteName'
-import { areArraysShallowEqual, isNil, times } from './utils'
+import { PitchClass } from './PitchClass'
+import { arraysShallowEqual, isNil, times } from './utils'
 
-const ChromaOrder = {
-  [NoteName.C]: 0,
-  [NoteName.D]: 2,
-  [NoteName.E]: 4,
-  [NoteName.F]: 5,
-  [NoteName.G]: 7,
-  [NoteName.A]: 9,
-  [NoteName.B]: 11,
+const PitchClassOrder = {
+  [NoteName.C]: PitchClass.C,
+  [NoteName.D]: PitchClass.D,
+  [NoteName.E]: PitchClass.E,
+  [NoteName.F]: PitchClass.F,
+  [NoteName.G]: PitchClass.G,
+  [NoteName.A]: PitchClass.A,
+  [NoteName.B]: PitchClass.B,
 }
 
-const ReverseChromaOrder = [
+const ReversePitchClassOrder = [
   [NoteName.C],
   [NoteName.C, NoteName.D],
   [NoteName.D],
@@ -26,41 +27,50 @@ const ReverseChromaOrder = [
   [NoteName.A, NoteName.B],
   [NoteName.B],
 ]
-function normalizeChroma(rawChroma: number): number {
-  return ((rawChroma % 12) + 12) % 12
-}
 
 export class Note {
-  public readonly name: NoteName
-  public readonly accidentals: ReadonlyArray<NoteAccidental>
+  private readonly _name: NoteName
+  private readonly _accidentals: ReadonlyArray<NoteAccidental>
 
   public constructor(name: NoteName, accidentals: NoteAccidental[]) {
-    this.name = name
-    this.accidentals = accidentals
+    this._name = name
+    this._accidentals = Object.freeze(Array.from(accidentals))
+  }
+
+  public name(): NoteName {
+    return this._name
+  }
+
+  public accidentals(): ReadonlyArray<NoteAccidental> {
+    return this._accidentals
+  }
+
+  public pitchClass(): PitchClass {
+    const noteChroma = PitchClass.toSemitones(PitchClassOrder[this.name()])
+    const accidentals = this.accidentals().reduce((sum, acc) => sum + (acc === NoteAccidental.Flat ? -1 : +1), 0)
+    return PitchClass.fromSemitones(noteChroma + accidentals)
   }
 
   public chroma(): number {
-    const noteChroma = ChromaOrder[this.name]
-    const accidentals = this.accidentals.reduce((sum, acc) => sum + (acc === NoteAccidental.Flat ? -1 : +1), 0)
-    return normalizeChroma(noteChroma + accidentals)
+    return PitchClass.toSemitones(this.pitchClass())
   }
 
-  public transposePreservingName(semitones: number): Note {
-    if (semitones === 0) {
+  public transposeTo(semitones: number, target: NoteName): Note {
+    if (semitones === 0 && this.name() === target) {
       return this
     }
-    const accidentals = this.accidentals.concat(
-      times(Math.abs(semitones), semitones > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat)
-    )
-    return new Note(this.name, accidentals)
+    const targetNotePitchClass = PitchClassOrder[target]
+    const targetPitchClass = PitchClass.fromSemitones(this.chroma() + semitones)
+    const distance = PitchClass.distance(targetPitchClass, targetNotePitchClass)
+    return new Note(target, times(distance, distance > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat))
   }
 
   public transpose(semitones: number, prefAcc: NoteAccidental = null): Note {
     if (semitones === 0) {
       return this
     }
-    const chroma = normalizeChroma(this.chroma() + semitones)
-    const noteNames = ReverseChromaOrder[chroma]
+    const newPitchClass = PitchClass.fromSemitones(this.chroma() + semitones)
+    const noteNames = ReversePitchClassOrder[PitchClass.toSemitones(newPitchClass)]
     const accidental = isNil(prefAcc) ? (semitones > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat) : prefAcc
     switch (noteNames.length) {
       case 1:
@@ -74,11 +84,11 @@ export class Note {
   }
 
   public toString(): string {
-    return `${this.name}${this.accidentals.join('')}`
+    return `${this.name()}${this.accidentals().join('')}`
   }
 
   public equals(other: Note): boolean {
-    return !isNil(other) && other.name === this.name && areArraysShallowEqual(this.accidentals, other.accidentals)
+    return !isNil(other) && other.name() === this.name() && arraysShallowEqual(this.accidentals(), other.accidentals())
   }
 }
 
