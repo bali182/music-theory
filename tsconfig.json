@@ -3,6 +3,7 @@
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "noUnusedLocals": true,
     "jsx": "react",
     "target": "es6"
   },

@@ -55,14 +55,14 @@ export class Note {
     return PitchClass.toSemitones(this.pitchClass())
   }
 
-  public transposeTo(semitones: number, target: NoteName): Note {
-    if (semitones === 0 && this.name() === target) {
+  public transposeTo(target: NoteName): Note {
+    if (this.name() === target) {
       return this
     }
-    const targetNotePitchClass = PitchClassOrder[target]
-    const targetPitchClass = PitchClass.fromSemitones(this.chroma() + semitones)
-    const distance = PitchClass.distance(targetPitchClass, targetNotePitchClass)
-    return new Note(target, times(distance, distance > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat))
+    const notePitchClass = PitchClassOrder[target]
+    const targetPitchClass = this.pitchClass()
+    const distance = PitchClass.distance(notePitchClass, targetPitchClass)
+    return new Note(target, times(Math.abs(distance), distance > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat))
   }
 
   public transpose(semitones: number, prefAcc: NoteAccidental = null): Note {

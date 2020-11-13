@@ -30,31 +30,37 @@ export namespace PitchClass {
   ])
 
   const Indices: { [pitchClass: string]: number } = Object.freeze(
-    PitchClass.Values.reduce((indices, pitchClass, index) => ({ ...indices, [pitchClass]: index }), {})
+    Values.reduce((indices, pitchClass, index) => ({ ...indices, [pitchClass]: index }), {})
   )
 
   export function fromSemitones(semitones: number): PitchClass {
-    return PitchClass.Values[((semitones % 12) + 12) % 12]
+    return Values[((semitones % 12) + 12) % 12]
   }
 
   export function toSemitones(pitchClass: PitchClass): number {
     return Indices[pitchClass]
   }
 
-  export function distance(from: PitchClass, to: PitchClass): number {
+  function positiveDistance(from: PitchClass, to: PitchClass): number {
     const _from = toSemitones(from)
     const _to = toSemitones(to)
-    const positive = _from < _to ? _to - _from : _to + 12 - _from
-    const negative = _from < _to ? -(12 - _to + _from) : -(12 - _from + _to)
+    if (_from < _to) {
+      return _to - _from
+    } else {
+      return _to + 12 - _from
+    }
+  }
 
-    console.log('+', positive, '-', negative)
-    return Math.abs(negative) < positive ? negative : positive
+  export function distance(from: PitchClass, to: PitchClass): number {
+    const positive = positiveDistance(from, to)
+    const negative = -(12 - positive)
+    return (Math.abs(negative) < positive ? negative : positive) % 12
   }
 
   export function from(pitchClass: PitchClass): ReadonlyArray<PitchClass> {
-    const index = PitchClass.Values.indexOf(pitchClass)
-    const end = PitchClass.Values.slice(0, index)
-    const start = PitchClass.Values.slice(index)
+    const index = Values.indexOf(pitchClass)
+    const end = Values.slice(0, index)
+    const start = Values.slice(index)
     return Object.freeze(start.concat(end))
   }
 }
