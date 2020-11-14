@@ -5,38 +5,100 @@ import { NoteAccidental } from './NoteAccidental'
 import { NoteName } from './NoteName'
 
 describe(HeptatonicScale.constructor.name, () => {
-  const { Ionian } = HeptatonicScaleName
+  const { Ionian, Aeolian, Locrian, Mixolydian, Lydian, Phrygian, Dorian } = HeptatonicScaleName
   const { C, D, E, F, G, A, B } = NoteName
-  const { Sharp, Flat } = NoteAccidental
+  const { Sharp, Flat, sharps } = NoteAccidental
 
-  it('should construct the proper Ionian scales', () => {
-    const cIonianNotes = [note(C), note(D), note(E), note(F), note(G), note(A), note(B)]
-    expect(heptatonicScale(note(NoteName.C), Ionian)).toHaveNotes(cIonianNotes)
+  it('should check if the intervals are set up correctly', () => {
+    const cLocrian = [note(C), note(D, Flat), note(E, Flat), note(F), note(G, Flat), note(A, Flat), note(B, Flat)]
+    expect(heptatonicScale(note(C), Locrian)).toHaveNotes(cLocrian)
 
-    const dIonianNotes = [note(D), note(E), note(F, Sharp), note(G), note(A), note(B), note(C, Sharp)]
-    expect(heptatonicScale(note(NoteName.D), Ionian)).toHaveNotes(dIonianNotes)
+    const dAeolian = [note(D), note(E), note(F), note(G), note(A), note(B, Flat), note(C)]
+    expect(heptatonicScale(note(D), Aeolian)).toHaveNotes(dAeolian)
 
-    const eIonianNotes = [note(E), note(F, Sharp), note(G, Sharp), note(A), note(B), note(C, Sharp), note(D, Sharp)]
-    expect(heptatonicScale(note(NoteName.E), Ionian)).toHaveNotes(eIonianNotes)
+    const eMixolydian = [note(E), note(F, Sharp), note(G, Sharp), note(A), note(B), note(C, Sharp), note(D)]
+    expect(heptatonicScale(note(E), Mixolydian)).toHaveNotes(eMixolydian)
 
-    const fIonianNotes = [note(F), note(G), note(A), note(B, Flat), note(C), note(D), note(E)]
-    expect(heptatonicScale(note(NoteName.F), Ionian)).toHaveNotes(fIonianNotes)
+    const fLydian = [note(F), note(G), note(A), note(B), note(C), note(D), note(E)]
+    expect(heptatonicScale(note(F), Lydian)).toHaveNotes(fLydian)
 
-    const gIonianNotes = [note(G), note(A), note(B), note(C), note(D), note(E), note(F, Sharp)]
-    expect(heptatonicScale(note(NoteName.G), Ionian)).toHaveNotes(gIonianNotes)
+    const gPhrygian = [note(G), note(A, Flat), note(B, Flat), note(C), note(D), note(E, Flat), note(F)]
+    expect(heptatonicScale(note(G), Phrygian)).toHaveNotes(gPhrygian)
 
-    const aIonianNotes = [note(A), note(B), note(C, Sharp), note(D), note(E), note(F, Sharp), note(G, Sharp)]
-    expect(heptatonicScale(note(NoteName.A), Ionian)).toHaveNotes(aIonianNotes)
+    const aDorian = [note(A), note(B), note(C), note(D), note(E), note(F, Sharp), note(G)]
+    expect(heptatonicScale(note(A), Dorian)).toHaveNotes(aDorian)
 
-    const bIonianNotes = [
-      note(B),
-      note(C, Sharp),
+    const bIonian = [note(B), note(C, Sharp), note(D, Sharp), note(E), note(F, Sharp), note(G, Sharp), note(A, Sharp)]
+    expect(heptatonicScale(note(NoteName.B), Ionian)).toHaveNotes(bIonian)
+  })
+
+  it('should construct the trickier ionian scales', () => {
+    const asIonian = [
+      note(A, Sharp),
+      note(B, Sharp),
+      note(C, ...sharps(2)),
       note(D, Sharp),
-      note(E),
+      note(E, Sharp),
+      note(F, ...sharps(2)),
+      note(G, ...sharps(2)),
+    ]
+    expect(heptatonicScale(note(NoteName.A, Sharp), Ionian)).toHaveNotes(asIonian)
+
+    const fsIonian = [
       note(F, Sharp),
       note(G, Sharp),
       note(A, Sharp),
+      note(B),
+      note(C, Sharp),
+      note(D, Sharp),
+      note(E, Sharp),
     ]
-    expect(heptatonicScale(note(NoteName.B), Ionian)).toHaveNotes(bIonianNotes)
+    expect(heptatonicScale(note(F, Sharp), Ionian)).toHaveNotes(fsIonian)
+  })
+
+  it('should construct the trickier aeolian scales', () => {
+    const dsAeolian = [
+      note(D, Sharp),
+      note(E, Sharp),
+      note(F, Sharp),
+      note(G, Sharp),
+      note(A, Sharp),
+      note(B),
+      note(C, Sharp),
+    ]
+    expect(heptatonicScale(note(D, Sharp), Aeolian)).toHaveNotes(dsAeolian)
+
+    const esAeolian = [
+      note(E, Sharp),
+      note(F, ...sharps(2)),
+      note(G, Sharp),
+      note(A, Sharp),
+      note(B, Sharp),
+      note(C, Sharp),
+      note(D, Sharp),
+    ]
+    expect(heptatonicScale(note(E, Sharp), Aeolian)).toHaveNotes(esAeolian)
+
+    const asAeolian = [
+      note(A, Sharp),
+      note(B, Sharp),
+      note(C, Sharp),
+      note(D, Sharp),
+      note(E, Sharp),
+      note(F, Sharp),
+      note(G, Sharp),
+    ]
+    expect(heptatonicScale(note(A, Sharp), Aeolian)).toHaveNotes(asAeolian)
+
+    const bsAeolian = [
+      note(B, Sharp),
+      note(C, ...sharps(2)),
+      note(D, Sharp),
+      note(E, Sharp),
+      note(F, ...sharps(2)),
+      note(G, Sharp),
+      note(A, Sharp),
+    ]
+    expect(heptatonicScale(note(B, Sharp), Aeolian)).toHaveNotes(bsAeolian)
   })
 })
