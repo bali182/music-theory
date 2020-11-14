@@ -6,6 +6,13 @@ export function times<T>(n: number, item: T): T[] {
   return array
 }
 
+export function zip<A, B, C>(arrA: ReadonlyArray<A>, arrB: ReadonlyArray<B>, zipper: (a: A, b: B) => C): C[] {
+  if (arrA.length !== arrB.length) {
+    throwTypeError('length of the 2 arrays should be equal')
+  }
+  return arrA.map((a, index) => zipper(a, arrB[index]))
+}
+
 export function throwTypeError(message: string): never {
   throw new TypeError(message)
 }
@@ -24,7 +31,13 @@ export function isValidEnumValue<T>(enumType: { [key: string]: T }, input: T): b
   return Object.values(enumType).includes(input)
 }
 
-export function arraysShallowEqual<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): boolean {
+const DefaultEquality = (a: any, b: any) => a === b
+
+export function arraysShallowEqual<T>(
+  a: ReadonlyArray<T>,
+  b: ReadonlyArray<T>,
+  equality: (a: T, b: T) => boolean = DefaultEquality
+): boolean {
   if (a === b) {
     return true
   }
@@ -33,7 +46,7 @@ export function arraysShallowEqual<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>):
   }
   const length = a.length
   for (let i = 0; i < length; i += 1) {
-    if (a[i] !== b[i]) {
+    if (!equality(a[i], b[i])) {
       return false
     }
   }

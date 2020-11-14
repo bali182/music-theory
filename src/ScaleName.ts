@@ -1,10 +1,4 @@
-export enum ScaleName {
-  // Modes
-  Ionian = 'Ionian',
-  Dorian = 'Dorian',
-  Phrygian = 'Phrygian',
-  Lydian = 'Lydian',
-  Mixolydian = 'Mixolydian',
-  Aeolian = 'Aeolian',
-  Locrian = 'Locrian',
-}
+import { HeptatonicScaleName } from './HeptatonicScaleName'
+
+// TODO list rest of the scale name enums here
+export type ScaleName = HeptatonicScaleName

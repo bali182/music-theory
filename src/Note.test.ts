@@ -3,7 +3,7 @@ import { NoteAccidental } from './NoteAccidental'
 import { NoteName } from './NoteName'
 import { PitchClass } from './PitchClass'
 
-describe('Note', () => {
+describe(Note.constructor.name, () => {
   const { Sharp, Flat, sharps, flats } = NoteAccidental
 
   describe(Note.prototype.pitchClass.name, () => {

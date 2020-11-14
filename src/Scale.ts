@@ -1,24 +1,39 @@
 import { Note } from './Note'
 import { ScaleName } from './ScaleName'
+import { arraysShallowEqual, isNil } from './utils'
 
-export class Scale {
-  private readonly _name: ScaleName
+export abstract class Scale<N extends ScaleName> {
+  private readonly _name: N
   private readonly _notes: ReadonlyArray<Note>
 
-  constructor(name: ScaleName, notes: Note[]) {
+  constructor(name: N, notes: Note[]) {
     this._name = name
     this._notes = Object.freeze(Array.from(notes))
   }
 
-  public name(): ScaleName {
+  public name(): N {
     return this._name
   }
 
   public notes(): ReadonlyArray<Note> {
     return this._notes
   }
-}
 
-export function scale(root: Note, scaleName: ScaleName): Scale {
-  return null
+  public root(): Note {
+    return this.notes()[0]
+  }
+
+  public equals(other: Scale<N>): boolean {
+    return (
+      !isNil(other) &&
+      other.name() === this.name() &&
+      arraysShallowEqual(this.notes(), other.notes(), (a, b) => a.equals(b))
+    )
+  }
+
+  public toString() {
+    return `${this.root()} ${this.name()} [${this.notes()
+      .map((note) => note.toString())
+      .join(', ')}]`
+  }
 }
