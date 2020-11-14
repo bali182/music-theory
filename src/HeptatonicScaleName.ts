@@ -1,13 +1,3 @@
-import {
-  AeolianIntervals,
-  DorianIntervals,
-  IonianIntervals,
-  LocrianIntervals,
-  LydianIntervals,
-  MixolydianIntervals,
-  PhrygianIntervals,
-} from './ScaleIntervals'
-
 export enum HeptatonicScaleName {
   Ionian = 'Ionian',
   Dorian = 'Dorian',
@@ -29,22 +19,17 @@ export namespace HeptatonicScaleName {
     HeptatonicScaleName.Locrian,
   ])
 
-  export function intervals(name: HeptatonicScaleName): number[] {
-    switch (name) {
-      case HeptatonicScaleName.Ionian:
-        return IonianIntervals
-      case HeptatonicScaleName.Dorian:
-        return DorianIntervals
-      case HeptatonicScaleName.Phrygian:
-        return PhrygianIntervals
-      case HeptatonicScaleName.Lydian:
-        return LydianIntervals
-      case HeptatonicScaleName.Mixolydian:
-        return MixolydianIntervals
-      case HeptatonicScaleName.Aeolian:
-        return AeolianIntervals
-      case HeptatonicScaleName.Locrian:
-        return LocrianIntervals
-    }
+  const Intervals: { [key: string]: ReadonlyArray<number> } = Object.freeze({
+    [HeptatonicScaleName.Ionian]: Object.freeze([0, 2, 4, 5, 7, 9, 11]),
+    [HeptatonicScaleName.Dorian]: Object.freeze([0, 2, 3, 5, 7, 9, 10]),
+    [HeptatonicScaleName.Phrygian]: Object.freeze([0, 1, 3, 5, 7, 8, 10]),
+    [HeptatonicScaleName.Lydian]: Object.freeze([0, 2, 4, 6, 7, 9, 11]),
+    [HeptatonicScaleName.Mixolydian]: Object.freeze([0, 2, 4, 5, 7, 9, 10]),
+    [HeptatonicScaleName.Aeolian]: Object.freeze([0, 2, 3, 5, 7, 8, 10]),
+    [HeptatonicScaleName.Locrian]: Object.freeze([0, 1, 3, 5, 6, 8, 10]),
+  })
+
+  export function intervals(name: HeptatonicScaleName): ReadonlyArray<number> {
+    return Intervals[name]
   }
 }
