@@ -16,17 +16,13 @@ export namespace TriadType {
   ])
 
   export function detect(root: Note, third: Note, fifth: Note): TriadType {
-    const _r = root.pitchClass()
-    const _t = root.pitchClass()
-    const _f = root.pitchClass()
-
-    const _rt = PitchClass.distance(_r, _t)
-    const _tf = PitchClass.distance(_t, _f)
-    if (_rt === 4 && _tf === 3) {
+    const rootToThird = PitchClass.distance(root.pitchClass(), third.pitchClass())
+    const thirdToFifth = PitchClass.distance(third.pitchClass(), fifth.pitchClass())
+    if (rootToThird === 4 && thirdToFifth === 3) {
       return TriadType.Major
-    } else if (_rt === 3 && _tf === 4) {
+    } else if (rootToThird === 3 && thirdToFifth === 4) {
       return TriadType.Minor
-    } else if (_rt === 3 && _tf === 3) {
+    } else if (rootToThird === 3 && thirdToFifth === 3) {
       return TriadType.Diminished
     }
     throw throwTypeError(`Unknown triad notes: ${root}, ${third}, ${fifth}`)

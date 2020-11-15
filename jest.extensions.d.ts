@@ -1,3 +1,4 @@
+import { Chord } from './src/Chord'
 import { Note } from './src/Note'
 import { Scale } from './src/Scale'
 
@@ -8,6 +9,7 @@ declare global {
     interface Matchers<R> {
       toEqualNote(note: Note): void
       toHaveNotes(notes: ReadonlyArray<Note>): void
+      toEqualChord(chord: Chord<any>): void
     }
   }
 }
