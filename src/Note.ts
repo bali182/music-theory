@@ -3,31 +3,6 @@ import { NoteName } from './NoteName'
 import { PitchClass } from './PitchClass'
 import { arraysShallowEqual, isNil, times } from './utils'
 
-const PitchClassOrder = {
-  [NoteName.C]: PitchClass.C,
-  [NoteName.D]: PitchClass.D,
-  [NoteName.E]: PitchClass.E,
-  [NoteName.F]: PitchClass.F,
-  [NoteName.G]: PitchClass.G,
-  [NoteName.A]: PitchClass.A,
-  [NoteName.B]: PitchClass.B,
-}
-
-const ReversePitchClassOrder = [
-  [NoteName.C],
-  [NoteName.C, NoteName.D],
-  [NoteName.D],
-  [NoteName.D, NoteName.E],
-  [NoteName.E],
-  [NoteName.F],
-  [NoteName.F, NoteName.G],
-  [NoteName.G],
-  [NoteName.G, NoteName.A],
-  [NoteName.A],
-  [NoteName.A, NoteName.B],
-  [NoteName.B],
-]
-
 export class Note {
   private readonly _name: NoteName
   private readonly _accidentals: ReadonlyArray<NoteAccidental>
@@ -46,7 +21,7 @@ export class Note {
   }
 
   public pitchClass(): PitchClass {
-    const noteChroma = PitchClass.toSemitones(PitchClassOrder[this.name()])
+    const noteChroma = PitchClass.toSemitones(NoteName.toPitchClass(this.name()))
     const accidentals = this.accidentals().reduce((sum, acc) => sum + (acc === NoteAccidental.Flat ? -1 : +1), 0)
     return PitchClass.fromSemitones(noteChroma + accidentals)
   }
@@ -59,7 +34,7 @@ export class Note {
     if (this.name() === target) {
       return this
     }
-    const notePitchClass = PitchClassOrder[target]
+    const notePitchClass = NoteName.toPitchClass(target)
     const targetPitchClass = this.pitchClass()
     const distance = PitchClass.distance(notePitchClass, targetPitchClass)
     return new Note(target, times(Math.abs(distance), distance > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat))
@@ -70,7 +45,7 @@ export class Note {
       return this
     }
     const newPitchClass = PitchClass.fromSemitones(this.chroma() + semitones)
-    const noteNames = ReversePitchClassOrder[PitchClass.toSemitones(newPitchClass)]
+    const noteNames = PitchClass.toNoteName(newPitchClass)
     const accidental = isNil(prefAcc) ? (semitones > 0 ? NoteAccidental.Sharp : NoteAccidental.Flat) : prefAcc
     switch (noteNames.length) {
       case 1:
@@ -90,8 +65,8 @@ export class Note {
   public equals(other: Note): boolean {
     return !isNil(other) && other.name() === this.name() && arraysShallowEqual(this.accidentals(), other.accidentals())
   }
-}
 
-export function note(name: NoteName, ...accidentals: NoteAccidental[]): Note {
-  return new Note(name, accidentals)
+  public static create(name: NoteName, ...accidentals: NoteAccidental[]): Note {
+    return new Note(name, accidentals)
+  }
 }

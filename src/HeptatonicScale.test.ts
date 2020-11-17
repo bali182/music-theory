@@ -1,9 +1,9 @@
 import { heptatonicScale, HeptatonicScale } from './HeptatonicScale'
 import { HeptatonicScaleName } from './HeptatonicScaleName'
-import { note } from './Note'
+import { Note } from './Note'
 import { NoteAccidental } from './NoteAccidental'
 import { NoteName } from './NoteName'
-import { triad } from './Triad'
+import { Triad } from './Triad'
 import { TriadType } from './TriadType'
 
 describe(HeptatonicScale.constructor.name, () => {
@@ -11,6 +11,7 @@ describe(HeptatonicScale.constructor.name, () => {
   const { C, D, E, F, G, A, B } = NoteName
   const { Sharp, Flat, sharps } = NoteAccidental
   const { Major, Minor, Diminished } = TriadType
+  const { create: note } = Note
 
   describe(`creation using ${heptatonicScale.name}`, () => {
     it('should check if the intervals are set up correctly', () => {
@@ -109,12 +110,12 @@ describe(HeptatonicScale.constructor.name, () => {
 
   describe('triad', () => {
     const scale = heptatonicScale(note(C), Ionian)
-    expect(scale.triad(0)).toEqualChord(triad(note(C), Major))
-    expect(scale.triad(1)).toEqualChord(triad(note(D), Minor))
-    expect(scale.triad(2)).toEqualChord(triad(note(E), Minor))
-    expect(scale.triad(3)).toEqualChord(triad(note(F), Major))
-    expect(scale.triad(4)).toEqualChord(triad(note(G), Major))
-    expect(scale.triad(5)).toEqualChord(triad(note(A), Minor))
-    expect(scale.triad(6)).toEqualChord(triad(note(B), Diminished))
+    expect(scale.triad(0)).toEqualChord(Triad.create(note(C), Major))
+    expect(scale.triad(1)).toEqualChord(Triad.create(note(D), Minor))
+    expect(scale.triad(2)).toEqualChord(Triad.create(note(E), Minor))
+    expect(scale.triad(3)).toEqualChord(Triad.create(note(F), Major))
+    expect(scale.triad(4)).toEqualChord(Triad.create(note(G), Major))
+    expect(scale.triad(5)).toEqualChord(Triad.create(note(A), Minor))
+    expect(scale.triad(6)).toEqualChord(Triad.create(note(B), Diminished))
   })
 })

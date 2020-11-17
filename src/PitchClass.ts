@@ -1,3 +1,5 @@
+import { NoteName } from './NoteName'
+
 export enum PitchClass {
   C = 'C',
   CSharpDFlat = 'C#/Db',
@@ -32,6 +34,35 @@ export namespace PitchClass {
   const Indices: { [pitchClass: string]: number } = Object.freeze(
     Values.reduce((indices, pitchClass, index) => ({ ...indices, [pitchClass]: index }), {})
   )
+
+  export function toNoteName(pitchClass: PitchClass): NoteName[] {
+    switch (pitchClass) {
+      case PitchClass.C:
+        return [NoteName.C]
+      case PitchClass.CSharpDFlat:
+        return [NoteName.C, NoteName.D]
+      case PitchClass.D:
+        return [NoteName.D]
+      case PitchClass.DSharpEFlat:
+        return [NoteName.D, NoteName.E]
+      case PitchClass.E:
+        return [NoteName.E]
+      case PitchClass.F:
+        return [NoteName.F]
+      case PitchClass.FSharpGFlat:
+        return [NoteName.F, NoteName.G]
+      case PitchClass.G:
+        return [NoteName.G]
+      case PitchClass.GSharpAFlat:
+        return [NoteName.G, NoteName.A]
+      case PitchClass.A:
+        return [NoteName.A]
+      case PitchClass.ASharpBFlat:
+        return [NoteName.A, NoteName.B]
+      case PitchClass.B:
+        return [NoteName.B]
+    }
+  }
 
   export function fromSemitones(semitones: number): PitchClass {
     return Values[((semitones % 12) + 12) % 12]

@@ -1,10 +1,11 @@
-import { Note, note } from './Note'
+import { Note } from './Note'
 import { NoteAccidental } from './NoteAccidental'
-import { NoteName } from './NoteName'
 import { PitchClass } from './PitchClass'
+import { NoteName } from './NoteName'
 
 describe(Note.constructor.name, () => {
   const { Sharp, Flat, sharps, flats } = NoteAccidental
+  const { create: note } = Note
 
   describe(Note.prototype.pitchClass.name, () => {
     it('should return the right chroma for notes without accidentals', () => {
