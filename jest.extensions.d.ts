@@ -9,7 +9,7 @@ declare global {
     interface Matchers<R> {
       toEqualNote(note: Note): void
       toHaveNotes(notes: ReadonlyArray<Note>): void
-      toEqualChord(chord: Chord<any>): void
+      toEqualChord(chord: Chord): void
     }
   }
 }

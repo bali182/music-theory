@@ -1,10 +1,10 @@
 import { Note } from './Note'
-import { NoteAccidental } from './NoteAccidental'
+import { Accidental } from './Accidental'
 import { PitchClass } from './PitchClass'
 import { NoteName } from './NoteName'
 
 describe(Note.constructor.name, () => {
-  const { Sharp, Flat, sharps, flats } = NoteAccidental
+  const { Sharp, Flat, sharps, flats } = Accidental
   const { create: note } = Note
 
   describe(Note.prototype.pitchClass.name, () => {

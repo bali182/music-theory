@@ -1,41 +1,24 @@
-import { ChordType } from './ChordType'
+import { ChordTone } from './ChordTone'
+import { IntervalType } from './IntervalType'
 import { Note } from './Note'
-import { arraysShallowEqual, isNil } from './utils'
 
-const PitchClassEquality = (a: Note, b: Note) => a.pitchClass() === b.pitchClass()
+export abstract class Chord {
+  private readonly _chordTones: ReadonlyArray<ChordTone>
 
-export abstract class Chord<T extends ChordType> {
-  private readonly _notes: ReadonlyArray<Note>
-  private readonly _type: T
-
-  constructor(type: T, notes: Note[]) {
-    this._notes = Object.freeze(Array.from(notes))
-    this._type = type
+  constructor(chordTones: ChordTone[]) {
+    this._chordTones = Object.freeze(Array.from(chordTones))
+    Object.freeze(this)
   }
 
-  public notes(): ReadonlyArray<Note> {
-    return this._notes
+  public chordTones(): ReadonlyArray<ChordTone> {
+    return this._chordTones
   }
 
-  public type(): T {
-    return this._type
+  public notes(): Note[] {
+    return this.chordTones().map((tone) => tone.note())
   }
 
-  public root(): Note {
-    return this.notes()[0]
-  }
-
-  public equals(other: Chord<T>): boolean {
-    return (
-      !isNil(other) &&
-      other.type() === this.type() &&
-      arraysShallowEqual(this.notes(), other.notes(), PitchClassEquality)
-    )
-  }
-
-  public toString() {
-    return `${this.root()} ${this.type()} [${this.notes()
-      .map((note) => note.toString())
-      .join(', ')}]`
+  public root(): ChordTone {
+    return this.chordTones().find((tone) => tone.intervalType() === IntervalType.Unison)
   }
 }

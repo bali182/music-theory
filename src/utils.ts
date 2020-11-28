@@ -6,6 +6,15 @@ export function times<T>(n: number, item: T): T[] {
   return array
 }
 
+export function findIndex<T>(array: T[], predicate: (e: T, index: number, array: T[]) => boolean): number {
+  for (let i = 0, len = array.length; i < len; i += 1) {
+    if (predicate(array[i], i, array)) {
+      return i
+    }
+  }
+  return -1
+}
+
 export function zip<A, B, C>(arrA: ReadonlyArray<A>, arrB: ReadonlyArray<B>, zipper: (a: A, b: B) => C): C[] {
   if (arrA.length !== arrB.length) {
     throwTypeError('length of the 2 arrays should be equal')

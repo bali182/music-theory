@@ -31,13 +31,13 @@ expect.extend({
     }
   },
 
-  toEqualChord(received: Chord<any>, expected: Chord<any>) {
-    if (expected.equals(received)) {
-      return {
-        message: () => `Both chords are "${expected}".`,
-        pass: true,
-      }
-    }
+  toEqualChord(received: Chord, expected: Chord) {
+    // if (expected.equals(received)) {
+    //   return {
+    //     message: () => `Both chords are "${expected}".`,
+    //     pass: true,
+    //   }
+    // }
     return {
       message: () => `expected chord "${expected}", got "${received}" instead`,
       pass: false,
