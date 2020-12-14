@@ -6,7 +6,7 @@ describe(Interval.constructor.name, () => {
   const { Perfect, Minor, Major, Diminished, Augmented } = IntervalQuality
 
   describe(Interval.prototype.semitones.name, () => {
-    it('should return proper semitones for simple intervals', () => {
+    xit('should return proper semitones for simple intervals', () => {
       expect(interval(1, Perfect).semitones()).toBe(0)
       expect(interval(2, Diminished).semitones()).toBe(0)
 
@@ -45,6 +45,11 @@ describe(Interval.constructor.name, () => {
 
       expect(interval(8, Perfect).semitones()).toBe(12)
       expect(interval(7, Augmented).semitones()).toBe(12)
+    })
+
+    xit('should return proper semitones for compund intervals', () => {
+      expect(interval(9, Minor).semitones()).toBe(13)
+      expect(interval(10, Diminished).semitones()).toBe(13)
     })
   })
 })
